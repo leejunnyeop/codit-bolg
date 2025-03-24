@@ -31,15 +31,16 @@ public class UserPostServiceImpl implements UserPostService {
         return new PostCreatResponseDto(true, post.getId());
     }
 
+
     @Override
-    public PostListResponseDto getPostList(int page, int size, String userId) {
+    public PostListResponseDto getPostList(int page, int size) {
         List<Post> paged = postRepository.findPaged(page, size);
         int totalPosts = postRepository.count();
         int totalPages = (int) Math.ceil((double) totalPosts / size);
         List<PostSummaryDto> postDtos = paged.stream()
-                .map(post -> {Post posts = postRepository.findByUserId(userId)
-                            .orElseThrow(() -> new IllegalArgumentException("작성자 없음"));
-                    return PostMapper.toSummaryDto(post, post.getAuthorId().toString());
+                .map(post -> {
+                    User author = userRepository.findById(post.getAuthorId()).orElseThrow(() -> new IllegalArgumentException("해당 게시판 작성자가 실종되었습니다."));
+                    return PostMapper.toSummaryDto(post, author);
                 })
                 .toList();
         return new PostListResponseDto(postDtos, totalPages, totalPosts);
