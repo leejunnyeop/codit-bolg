@@ -7,6 +7,7 @@ import com.codit.blog.domain.entity.User;
 import com.codit.blog.domain.mapper.UserMapper;
 import com.codit.blog.jwt.JwtUtil;
 import com.codit.blog.repository.UserRepository;
+import com.codit.blog.util.ImageValidator;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ public class UerServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private static Boolean check = Boolean.TRUE;
-
 
     @Override
     public void create(UserRequestDto userRequestDto){

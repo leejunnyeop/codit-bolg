@@ -21,15 +21,6 @@ public class PostRepository extends AbstractFileRepository<Post>{
         return Optional.ofNullable(postMap.get(postId));
     }
 
-
-
-
-//    public List<Post> findByAll() {
-//        Map<UUID, Post> postMap = loadAll();
-//        return postMap.values().stream()
-//                .collect(Collectors.toList());
-//    }
-
     public List<Post> latestFirst(){
         Map<UUID, Post> postMap = loadAll();
        return postMap.values().stream()
@@ -62,12 +53,11 @@ public class PostRepository extends AbstractFileRepository<Post>{
             writeToFile(postMap);
         }
     }
-//    public void delete(UUID userId) {
-//        Map<UUID, User> users = loadAll();
-//        users.remove(userId);
-//        writeToFile(users);
-//    }
-//
+    public void delete(UUID postId) {
+        Map<UUID,Post> postMap = loadAll();
+        postMap.remove(postId);
+        writeToFile(postMap);
+    }
     public Optional<Post> findByUserId(String userId) {
         Map<UUID, Post> postMap = loadAll();
         return postMap.values().stream().filter(post -> post.getAuthorId().equals(userId)).findFirst();

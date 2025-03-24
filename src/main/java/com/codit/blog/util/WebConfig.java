@@ -1,6 +1,7 @@
-package com.codit.blog.jwt;
+package com.codit.blog.util;
 
 
+import com.codit.blog.jwt.JwtAuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

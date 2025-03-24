@@ -6,10 +6,12 @@ import com.codit.blog.domain.dto.postDto.PostDetailResponseDto;
 import com.codit.blog.domain.dto.postDto.PostListResponseDto;
 import com.codit.blog.domain.dto.postDto.PostUpdateRequestDto;
 import com.codit.blog.service.post.UserPostService;
+import com.codit.blog.util.ImageValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(" api/posts")
@@ -28,17 +31,13 @@ public class PostController {
 
     @PostMapping()
     public ResponseEntity<PostCreatResponseDto> createPost(
-            @RequestBody @Valid PostCreateRequestDto requestDto,
+            @RequestBody @Valid PostCreateRequestDto requestDto, MultipartFile file,
             HttpServletRequest request
     ) {
         String userId = (String) request.getAttribute("userId");
-        return ResponseEntity.ok(userPostService.createPost(userId, requestDto));
+        return ResponseEntity.ok(userPostService.createPost(userId, requestDto, file));
     }
 
-    /*
-PUT /api/posts/{postId} - 게시물 수정 (인증 필요)
-DELETE /api/posts/{postId} - 게시물 삭제 (인증 필요)
-     */
 
     @GetMapping()
     public ResponseEntity<PostListResponseDto> getPostList(
@@ -58,10 +57,16 @@ DELETE /api/posts/{postId} - 게시물 삭제 (인증 필요)
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<String> updatePost(@PathVariable String postId,PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request){
+    public ResponseEntity<String> updatePost(@PathVariable String postId,PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request,MultipartFile file) {
         String userId = (String) request.getAttribute("userId");
-        userPostService.updatePost(userId, postId, postUpdateRequestDto);
+        userPostService.updatePost(userId, postId, postUpdateRequestDto,file);
         return ResponseEntity.ok("회원정보가 수정 완료되었습니다.");
     }
 
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable String postId, HttpServletRequest request){
+        String userId = (String) request.getAttribute("userId");
+        userPostService.deletePost(userId, postId);
+        return ResponseEntity.noContent().build();
+    }
 }

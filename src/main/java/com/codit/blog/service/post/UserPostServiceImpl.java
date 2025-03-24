@@ -9,13 +9,16 @@ import com.codit.blog.domain.dto.postDto.PostUpdateRequestDto;
 import com.codit.blog.domain.entity.Post;
 import com.codit.blog.domain.entity.User;
 import com.codit.blog.domain.mapper.PostMapper;
+import com.codit.blog.repository.ImageStorageRepository;
 import com.codit.blog.repository.PostRepository;
 import com.codit.blog.repository.UserRepository;
+import com.codit.blog.util.ImageValidator;
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +26,20 @@ public class UserPostServiceImpl implements UserPostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final ImageStorageService imageStorageService;
+    private final ImageStorageRepository imageStorageRepository;
+    private final ImageValidator imageValidator;
+
 
     @Override
-    public PostCreatResponseDto createPost(String userId, PostCreateRequestDto requestDto) {
+    public PostCreatResponseDto createPost(String userId, PostCreateRequestDto requestDto, MultipartFile file) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 회원 입니다. 확인 부탁드립니다"));
         Post post = PostMapper.toPost(requestDto, user.getId());
+        if (file != null && !file.isEmpty()) {
+            imageValidator.validate(file);
+            imageStorageService.save(post.getId(), file);
+        }
         postRepository.save(post);
         return new PostCreatResponseDto(true, post.getId());
     }
@@ -41,7 +52,8 @@ public class UserPostServiceImpl implements UserPostService {
         int totalPages = (int) Math.ceil((double) totalPosts / size);
         List<PostSummaryDto> postDtos = paged.stream()
                 .map(post -> {
-                    User author = userRepository.findById(post.getAuthorId()).orElseThrow(() -> new IllegalArgumentException("해당 게시판 작성자가 실종되었습니다."));
+                    User author = userRepository.findById(post.getAuthorId())
+                            .orElseThrow(() -> new IllegalArgumentException("해당 게시판 작성자가 실종되었습니다."));
                     return PostMapper.toSummaryDto(post, author);
                 })
                 .toList();
@@ -58,12 +70,16 @@ public class UserPostServiceImpl implements UserPostService {
     }
 
     @Override
-    public void updatePost(String userId, String postId, PostUpdateRequestDto requestDto) {
+    public void updatePost(String userId, String postId, PostUpdateRequestDto requestDto, MultipartFile file)throws IOException {
         Post post = postRepository.findById(UUID.fromString(postId))
                 .orElseThrow(() -> new IllegalArgumentException("없는 게시판 입니다."));
-        if(!post.getAuthorId().equals(userId) || !userRepository.existsById(userId)) {
+        if (!post.getAuthorId().equals(userId) || !userRepository.existsById(userId)) {
             throw new IllegalArgumentException("권한이 없습니다");
         }
+        if (file != null && !file.isEmpty()) {
+                imageValidator.validate(file);
+                imageStorageService.update(post.getId(), file);
+            }
         post.postEdit(requestDto.title(), requestDto.content(), requestDto.tags());
     }
 
@@ -71,7 +87,7 @@ public class UserPostServiceImpl implements UserPostService {
     public void deletePost(String userId, String postId) {
         Post post = postRepository.findById(UUID.fromString(postId))
                 .orElseThrow(() -> new IllegalArgumentException("없는 게시판 입니다."));
-        if(!post.getAuthorId().equals(userId) || !userRepository.existsById(userId)) {
+        if (!post.getAuthorId().equals(userId) || !userRepository.existsById(userId)) {
             throw new IllegalArgumentException("권한이 없습니다");
         }
         postRepository.delete(UUID.fromString(postId));
