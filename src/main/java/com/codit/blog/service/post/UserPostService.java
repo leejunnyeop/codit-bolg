@@ -21,10 +21,10 @@ public interface UserPostService {
 
     // 게시물 수정 (작성자 확인 필요)
     void updatePost(String userId, String postId, PostUpdateRequestDto requestDto);
-//
-//    // 게시물 삭제 (작성자 확인 필요)
-//    void deletePost(String userId, UUID postId);
-//
+
+    // 게시물 삭제 (작성자 확인 필요)
+    void deletePost(String userId,String postId);
+
 //    // 키워드 검색
 //    PostListResponse searchPosts(String keyword, int page, int size);
 //

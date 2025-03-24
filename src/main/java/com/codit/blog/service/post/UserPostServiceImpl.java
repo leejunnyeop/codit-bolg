@@ -12,6 +12,7 @@ import com.codit.blog.domain.mapper.PostMapper;
 import com.codit.blog.repository.PostRepository;
 import com.codit.blog.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,15 @@ public class UserPostServiceImpl implements UserPostService {
         post.postEdit(requestDto.title(), requestDto.content(), requestDto.tags());
     }
 
-
+    @Override
+    public void deletePost(String userId, String postId) {
+        Post post = postRepository.findById(UUID.fromString(postId))
+                .orElseThrow(() -> new IllegalArgumentException("없는 게시판 입니다."));
+        if(!post.getAuthorId().equals(userId) || !userRepository.existsById(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다");
+        }
+        postRepository.delete(UUID.fromString(postId));
+    }
 
 
 }
