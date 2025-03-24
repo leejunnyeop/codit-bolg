@@ -1,5 +1,7 @@
 package com.codit.blog.controller;
 
+import com.codit.blog.domain.dto.UserLoginRequestDto;
+import com.codit.blog.domain.dto.UserLoginResponse;
 import com.codit.blog.domain.dto.UserRequestDto;
 import com.codit.blog.service.UserService;
 import jakarta.validation.Valid;
@@ -29,13 +31,12 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UserRequestDto userRequestDto) {
-        try {
-            userService.login(userRequestDto);
-            return ResponseEntity.ok("로그인 성공!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패: 아이디 또는 비밀번호를 확인해주세요.");
+    public ResponseEntity<UserLoginResponse> login(@RequestBody @Valid UserLoginRequestDto dto) {
+        UserLoginResponse response = userService.login(dto);
+
+        if (!response.success()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
+        return ResponseEntity.ok(response);
     }
 }

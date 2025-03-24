@@ -13,9 +13,9 @@ public class UserRepository extends AbstractFileRepository<User> {
         super("user.dat");
     }
 
-    public Optional<User> findById(UUID userId) {
+    public Optional<User> findById(String userId) {
         Map<UUID, User> users = loadAll();
-        return Optional.ofNullable(users.get(userId));
+        return Optional.ofNullable(users.get(UUID.fromString(userId)));
     }
 
 

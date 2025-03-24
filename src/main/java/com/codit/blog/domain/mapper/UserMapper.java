@@ -1,6 +1,8 @@
 package com.codit.blog.domain.mapper;
 
 
+import com.codit.blog.domain.dto.UserCreateResponse;
+import com.codit.blog.domain.dto.UserLoginResponse;
 import com.codit.blog.domain.dto.UserRequestDto;
 import com.codit.blog.domain.entity.User;
 import java.time.Instant;
@@ -15,4 +17,18 @@ public class UserMapper {
                 .createdAt(Instant.now())
                 .build();
     }
+
+    public static UserCreateResponse toUserCreateResponse(Boolean check, String message) {
+        return UserCreateResponse.builder()
+                .success(check)
+                .message(message)
+                .build();
+    }
+
+    public static UserLoginResponse toUserLoginResponse(Boolean check, String token) {
+        return new UserLoginResponse(
+                check, token
+        );
+    }
+
 }
