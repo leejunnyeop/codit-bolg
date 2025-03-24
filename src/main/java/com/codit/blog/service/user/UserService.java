@@ -1,4 +1,4 @@
-package com.codit.blog.service;
+package com.codit.blog.service.user;
 
 import com.codit.blog.domain.dto.userDto.UserLoginRequestDto;
 import com.codit.blog.domain.dto.userDto.UserLoginResponse;

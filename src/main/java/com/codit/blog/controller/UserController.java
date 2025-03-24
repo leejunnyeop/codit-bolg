@@ -3,7 +3,7 @@ package com.codit.blog.controller;
 import com.codit.blog.domain.dto.userDto.UserLoginRequestDto;
 import com.codit.blog.domain.dto.userDto.UserLoginResponse;
 import com.codit.blog.domain.dto.userDto.UserRequestDto;
-import com.codit.blog.service.UserService;
+import com.codit.blog.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
