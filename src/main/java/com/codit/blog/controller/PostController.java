@@ -47,7 +47,7 @@ DELETE /api/posts/{postId} - 게시물 삭제 (인증 필요)
             HttpServletRequest request
     ) {
         String userId = (String) request.getAttribute("userId");
-        PostListResponseDto response = userPostService.getPostList(page, size,userId);
+        PostListResponseDto response = userPostService.getPostList(page, size);
         return ResponseEntity.ok(response);
     }
 

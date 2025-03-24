@@ -12,7 +12,7 @@ public interface UserPostService {
     PostCreatResponseDto createPost(String userId, PostCreateRequestDto requestDto);
 
 //    // 게시물 목록 조회
-    PostListResponseDto getPostList(int page, int size, String userId);
+    PostListResponseDto getPostList(int page, int size);
 
     // 게시물 상세 조회
     PostDetailResponseDto getPostDetail(String postId);
