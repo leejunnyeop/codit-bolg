@@ -31,11 +31,6 @@ public class UerServiceImpl implements UserService {
     }
 
     @Override
-    public void find(UserRequestDto userRequestDto) {
-
-    }
-
-    @Override
     public UserLoginResponse login(UserLoginRequestDto userLoginRequestDto) {
         User user = userRepository.findById(userLoginRequestDto.uuid())
                 .orElseThrow(() -> new IllegalArgumentException("없는 회원 입니다. 확인 부탁드립니다"));
@@ -48,13 +43,4 @@ public class UerServiceImpl implements UserService {
         return UserMapper.toUserLoginResponse(check, generateToken);
     }
 
-    @Override
-    public void update(UserRequestDto userRequestDto) {
-
-    }
-
-    @Override
-    public void delete(UserRequestDto userRequestDto) {
-
-    }
 }
