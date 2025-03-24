@@ -8,13 +8,8 @@ public interface UserService {
 
     public void create(UserRequestDto userRequestDto);
 
-    public void find(UserRequestDto userRequestDto);
-
     public UserLoginResponse login(UserLoginRequestDto userLoginRequestDto);
 
-    public void update(UserRequestDto userRequestDto);
-
-    public void delete(UserRequestDto userRequestDto);
 
 
 }
