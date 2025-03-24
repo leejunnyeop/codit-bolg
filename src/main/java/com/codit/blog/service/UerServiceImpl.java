@@ -1,9 +1,11 @@
 package com.codit.blog.service;
 
 import com.codit.blog.domain.dto.UserRequestDto;
+import com.codit.blog.domain.entity.User;
 import com.codit.blog.domain.mapper.UserMapper;
 import com.codit.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +20,9 @@ public class UerServiceImpl implements UserService{
         if(!userRepository.findByEmail(userRequestDto.email()).isPresent()){
             throw new IllegalArgumentException("존재하는 이메일 입니다. 확인 부탁드립니다");
         }
-        UserMapper.toUser(userRequestDto);
+        String bcryptPassword = BCrypt.hashpw(userRequestDto.password(), BCrypt.gensalt());
+        User user = UserMapper.toUser(userRequestDto, bcryptPassword);
+        userRepository.save(user);
     }
 
     @Override

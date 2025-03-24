@@ -7,10 +7,10 @@ import java.time.Instant;
 
 public class UserMapper {
 
-    public static User toUser(UserRequestDto userRequestDto) {
+    public static User toUser(UserRequestDto userRequestDto, String hashPassword) {
         return User.builder()
                 .email(userRequestDto.email())
-                .password(userRequestDto.password())
+                .password(hashPassword)
                 .nickname(userRequestDto.nickname())
                 .createdAt(Instant.now())
                 .build();
