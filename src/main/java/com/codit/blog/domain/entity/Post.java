@@ -14,10 +14,10 @@ public class Post implements Serializable {
     private static final long serialVersionUID = 3L;
 
     private final UUID id;
-    private final String title;
-    private final String content;
-    private final String authorId;
-    private final List<String> tags;
+    private String title;
+    private String content;
+    private String authorId;
+    private List<String> tags;
     private final Instant createdAt;
     private final Instant updatedAt;
 
@@ -31,5 +31,17 @@ public class Post implements Serializable {
         this.tags = tags;
         this.createdAt = createdAt;
         this.updatedAt = createdAt;
+    }
+
+    public void postEdit(String title, String content, List<String> tags){
+        if(title != null){
+            this.title = title;
+        }
+        if(content != null){
+            this.content = content;
+        }
+        if(tags != null){
+            this.tags = tags;
+        }
     }
 }

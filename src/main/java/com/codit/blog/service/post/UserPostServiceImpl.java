@@ -5,6 +5,7 @@ import com.codit.blog.domain.dto.postDto.PostCreateRequestDto;
 import com.codit.blog.domain.dto.postDto.PostDetailResponseDto;
 import com.codit.blog.domain.dto.postDto.PostListResponseDto;
 import com.codit.blog.domain.dto.postDto.PostSummaryDto;
+import com.codit.blog.domain.dto.postDto.PostUpdateRequestDto;
 import com.codit.blog.domain.entity.Post;
 import com.codit.blog.domain.entity.User;
 import com.codit.blog.domain.mapper.PostMapper;
@@ -54,6 +55,18 @@ public class UserPostServiceImpl implements UserPostService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시판 작성자가 실종되었습니다."));
         return PostMapper.toPostDetailResponse(post, user);
     }
+
+    @Override
+    public void updatePost(String userId, String postId, PostUpdateRequestDto requestDto) {
+        Post post = postRepository.findById(UUID.fromString(postId))
+                .orElseThrow(() -> new IllegalArgumentException("없는 게시판 입니다."));
+        if(!post.getAuthorId().equals(userId) || !userRepository.existsById(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다");
+        }
+        post.postEdit(requestDto.title(), requestDto.content(), requestDto.tags());
+    }
+
+
 
 
 }

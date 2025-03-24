@@ -4,6 +4,8 @@ import com.codit.blog.domain.dto.postDto.PostCreatResponseDto;
 import com.codit.blog.domain.dto.postDto.PostCreateRequestDto;
 import com.codit.blog.domain.dto.postDto.PostDetailResponseDto;
 import com.codit.blog.domain.dto.postDto.PostListResponseDto;
+import com.codit.blog.domain.dto.postDto.PostUpdateRequestDto;
+import java.util.UUID;
 
 
 public interface UserPostService {
@@ -16,9 +18,9 @@ public interface UserPostService {
 
     // 게시물 상세 조회
     PostDetailResponseDto getPostDetail(String postId);
-//
-//    // 게시물 수정 (작성자 확인 필요)
-//    void updatePost(String userId, UUID postId, PostUpdateRequestDto requestDto);
+
+    // 게시물 수정 (작성자 확인 필요)
+    void updatePost(String userId, String postId, PostUpdateRequestDto requestDto);
 //
 //    // 게시물 삭제 (작성자 확인 필요)
 //    void deletePost(String userId, UUID postId);
