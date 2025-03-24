@@ -2,6 +2,7 @@ package com.codit.blog.service.post;
 
 import com.codit.blog.domain.dto.postDto.PostCreatResponseDto;
 import com.codit.blog.domain.dto.postDto.PostCreateRequestDto;
+import com.codit.blog.domain.dto.postDto.PostListResponseDto;
 
 
 public interface UserPostService {
@@ -10,7 +11,7 @@ public interface UserPostService {
     PostCreatResponseDto createPost(String userId, PostCreateRequestDto requestDto);
 
 //    // 게시물 목록 조회
-//    PostListResponse getPostList(int page, int size);
+    PostListResponseDto getPostList(int page, int size, String userId);
 //
 //    // 게시물 상세 조회
 //    PostDetailResponse getPostDetail(UUID postId, String requesterUserId);

@@ -2,8 +2,12 @@ package com.codit.blog.repository;
 
 
 import com.codit.blog.domain.entity.Post;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -12,24 +16,42 @@ public class PostRepository extends AbstractFileRepository<Post>{
         super("post.dat");
     }
 
-//    public Optional<User> findById(UUID postId) {
-//        Map<UUID, User> users = loadAll();
-//        return Optional.ofNullable(users.get(UUID.fromString(userId)));
-//    }
+    public Optional<Post> findById(UUID postId) {
+        Map<UUID, Post> postMap = loadAll();
+        return Optional.ofNullable(postMap.get(postId));
+    }
 
 
-//    public List<User> findByAll() {
-//        Map<UUID, User> users = loadAll();
-//        return users.values().stream()
-//                .filter(user -> !user.isDeleted())
+
+
+//    public List<Post> findByAll() {
+//        Map<UUID, Post> postMap = loadAll();
+//        return postMap.values().stream()
 //                .collect(Collectors.toList());
 //    }
 
-//    public Boolean existsById(String userId) {
-//        Map<UUID, User> users = loadAll();
-//        Boolean exists = users.containsKey(UUID.fromString(userId));
-//        return exists;
-//    }
+    public List<Post> latestFirst(){
+        Map<UUID, Post> postMap = loadAll();
+       return postMap.values().stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public List<Post> paged(List<Post> posts, int page, int size) {
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, posts.size());
+        if (fromIndex >= posts.size()) return List.of();
+        return posts.subList(fromIndex, toIndex);
+    }
+
+    public List<Post> findPaged(int page, int size) {
+        return paged(latestFirst(), page, size);
+    }
+
+    public Integer count() {
+        Map<UUID, Post> postMap = loadAll();
+        return postMap.size();
+    }
 
     public void save(Post post) {
         Map<UUID, Post> postMap = loadAll();
