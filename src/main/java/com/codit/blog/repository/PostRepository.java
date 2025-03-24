@@ -68,21 +68,14 @@ public class PostRepository extends AbstractFileRepository<Post>{
 //        writeToFile(users);
 //    }
 //
-//    public Optional<User> findByNickname(String nickname) {
-//        Map<UUID, User> users = loadAll();
-//        return users.values().stream().filter(user -> user.getNickname().equals(nickname)).findFirst();
-//    }
-//
-//    public Optional<User> findByEmail(String email) {
-//        Map<UUID, User> users = loadAll();
-//        return users.values().stream().filter(user -> user.getEmail().equals(email)).findFirst();
-//    }
-//
-//    public Optional<User> findByPassword(String password) {
-//        Map<UUID, User> users = loadAll();
-//        return users.values().stream().filter(user -> user.getPassword().equals(password)).findFirst();
-//    }
-//
-
+    public Optional<Post> findByUserId(String userId) {
+        Map<UUID, Post> postMap = loadAll();
+        return postMap.values().stream().filter(post -> post.getAuthorId().equals(userId)).findFirst();
+    }
+    public List<Post> findByPostIdAndUserId(String postId, String userId) {
+        Map<UUID, Post> postMap = loadAll();
+        return postMap.values().stream().filter(post -> post.getAuthorId().equals(userId)).filter(post -> post.getId().equals(postId)).collect(
+                Collectors.toList());
+    }
 
 }
