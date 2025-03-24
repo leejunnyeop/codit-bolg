@@ -1,8 +1,8 @@
 package com.codit.blog.service;
 
-import com.codit.blog.domain.dto.UserLoginRequestDto;
-import com.codit.blog.domain.dto.UserLoginResponse;
-import com.codit.blog.domain.dto.UserRequestDto;
+import com.codit.blog.domain.dto.userDto.UserLoginRequestDto;
+import com.codit.blog.domain.dto.userDto.UserLoginResponse;
+import com.codit.blog.domain.dto.userDto.UserRequestDto;
 
 public interface UserService {
 

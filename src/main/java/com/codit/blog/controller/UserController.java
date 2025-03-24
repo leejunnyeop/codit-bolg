@@ -1,8 +1,8 @@
 package com.codit.blog.controller;
 
-import com.codit.blog.domain.dto.UserLoginRequestDto;
-import com.codit.blog.domain.dto.UserLoginResponse;
-import com.codit.blog.domain.dto.UserRequestDto;
+import com.codit.blog.domain.dto.userDto.UserLoginRequestDto;
+import com.codit.blog.domain.dto.userDto.UserLoginResponse;
+import com.codit.blog.domain.dto.userDto.UserRequestDto;
 import com.codit.blog.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

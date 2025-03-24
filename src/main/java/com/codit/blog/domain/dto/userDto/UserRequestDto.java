@@ -1,4 +1,4 @@
-package com.codit.blog.domain.dto;
+package com.codit.blog.domain.dto.userDto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

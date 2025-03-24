@@ -1,9 +1,9 @@
 package com.codit.blog.domain.mapper;
 
 
-import com.codit.blog.domain.dto.UserCreateResponse;
-import com.codit.blog.domain.dto.UserLoginResponse;
-import com.codit.blog.domain.dto.UserRequestDto;
+import com.codit.blog.domain.dto.userDto.UserCreateResponse;
+import com.codit.blog.domain.dto.userDto.UserLoginResponse;
+import com.codit.blog.domain.dto.userDto.UserRequestDto;
 import com.codit.blog.domain.entity.User;
 import java.time.Instant;
 
