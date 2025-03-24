@@ -1,7 +1,6 @@
 package com.codit.blog.jwt;
 
 import com.codit.blog.repository.UserRepository;
-import com.codit.blog.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
