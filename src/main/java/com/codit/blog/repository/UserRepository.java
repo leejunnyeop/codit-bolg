@@ -26,6 +26,12 @@ public class UserRepository extends AbstractFileRepository<User> {
 //                .collect(Collectors.toList());
 //    }
 
+    public Boolean existsById(String userId) {
+        Map<UUID, User> users = loadAll();
+        Boolean exists = users.containsKey(UUID.fromString(userId));
+        return exists;
+    }
+
     public void save(User user) {
         Map<UUID, User> users = loadAll();
         if (users.containsKey(user.getId())) {
