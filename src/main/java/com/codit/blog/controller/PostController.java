@@ -9,6 +9,7 @@ import com.codit.blog.service.post.UserPostService;
 import com.codit.blog.util.ImageValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,7 +58,8 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<String> updatePost(@PathVariable String postId,PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request,MultipartFile file) {
+    public ResponseEntity<String> updatePost(@PathVariable String postId,PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request,MultipartFile file)
+            throws IOException {
         String userId = (String) request.getAttribute("userId");
         userPostService.updatePost(userId, postId, postUpdateRequestDto,file);
         return ResponseEntity.ok("회원정보가 수정 완료되었습니다.");
