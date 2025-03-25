@@ -5,8 +5,8 @@ import com.codit.blog.domain.entity.Post;
 import com.codit.blog.domain.entity.User;
 import com.codit.blog.domain.mapper.PostMapper;
 import com.codit.blog.repository.PostRepository;
-import com.codit.blog.repository.UserRepository;
 import com.codit.blog.util.ImageValidator;
+import com.codit.blog.util.PostListUtil;
 import com.codit.blog.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,10 @@ import java.util.UUID;
 public class UserPostServiceImpl implements UserPostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final ImageStorageService imageStorageService;
     private final ImageValidator imageValidator;
     private final UserUtil userUtil;
+    private final PostListUtil postListUtil;
 
     @Override
     public PostCreatResponseDto createPost(String userId, PostCreateRequestDto requestDto, MultipartFile file) {
@@ -45,13 +45,7 @@ public class UserPostServiceImpl implements UserPostService {
         List<Post> paged = postRepository.findPaged(page, size);
         int totalPosts = postRepository.count();
         int totalPages = (int) Math.ceil((double) totalPosts / size);
-        List<PostSummaryDto> postDtos = paged.stream()
-                .map(post -> {
-                    User author = userUtil.getUserOrThrow(post.getAuthorId());
-                    return PostMapper.toSummaryDto(post, author);
-                })
-                .toList();
-        return new PostListResponseDto(postDtos, totalPages, totalPosts);
+        return postListUtil.paginateAndMap(paged, totalPages, totalPosts);
     }
 
     @Override
@@ -87,56 +81,12 @@ public class UserPostServiceImpl implements UserPostService {
     @Override
     public PostListResponseDto searchPosts(String keyword, int page, int size) {
         List<Post> filtered = postRepository.findByKeyword(keyword);
-
-        if (filtered == null || filtered.isEmpty()) {
-            throw new IllegalArgumentException("검색한 단어는 없습니다. 다시 검색해주세요");
-        }
-
-        int totalPosts = filtered.size();
-        int totalPages = (int) Math.ceil((double) totalPosts / size);
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalPosts);
-        if (fromIndex >= totalPosts) {
-            return new PostListResponseDto(List.of(), totalPages, page);
-        }
-
-        List<Post> paged = filtered.subList(fromIndex, toIndex);
-
-        List<PostSummaryDto> postDtos = paged.stream()
-                .map(post -> {
-                    User author = userUtil.getUserOrThrow(post.getAuthorId());
-                    return PostMapper.toSummaryDto(post, author);
-                })
-                .toList();
-
-        return new PostListResponseDto(postDtos, totalPages, page);
+        return postListUtil.paginateAndMap(filtered, page, size);
     }
 
     @Override
     public PostListResponseDto searchByTag(String tag, int page, int size) {
         List<Post> filtered = postRepository.findByTag(tag);
-
-        if (filtered == null || filtered.isEmpty()) {
-            throw new IllegalArgumentException("검색한 단어는 없습니다. 다시 검색해주세요");
-        }
-
-        int totalPosts = filtered.size();
-        int totalPages = (int) Math.ceil((double) totalPosts / size);
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalPosts);
-        if (fromIndex >= totalPosts) {
-            return new PostListResponseDto(List.of(), totalPages, page);
-        }
-
-        List<Post> paged = filtered.subList(fromIndex, toIndex);
-
-        List<PostSummaryDto> postDtos = paged.stream()
-                .map(post -> {
-                    User author = userUtil.getUserOrThrow(post.getAuthorId());
-                    return PostMapper.toSummaryDto(post, author);
-                })
-                .toList();
-
-        return new PostListResponseDto(postDtos, totalPages, page);
+        return postListUtil.paginateAndMap(filtered, page, size);
     }
 }
