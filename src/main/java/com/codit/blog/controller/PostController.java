@@ -71,4 +71,14 @@ public class PostController {
         userPostService.deletePost(userId, postId);
         return ResponseEntity.noContent().build();
     }
+
+    //GET /api/posts/search?keyword={keyword}&page={page}&size={size} - 키워드 검색
+
+      @GetMapping("/search")
+    public ResponseEntity<PostListResponseDto> searchPost(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size,
+                                                          @RequestParam String keyword){
+          PostListResponseDto postListResponseDto = userPostService.searchPosts(keyword, page, size);
+          return ResponseEntity.ok(postListResponseDto);
+      }
 }

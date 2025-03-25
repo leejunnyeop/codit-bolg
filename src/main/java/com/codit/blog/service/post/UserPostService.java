@@ -6,7 +6,6 @@ import com.codit.blog.domain.dto.postDto.PostDetailResponseDto;
 import com.codit.blog.domain.dto.postDto.PostListResponseDto;
 import com.codit.blog.domain.dto.postDto.PostUpdateRequestDto;
 import java.io.IOException;
-import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -28,9 +27,9 @@ public interface UserPostService {
     // 게시물 삭제 (작성자 확인 필요)
     void deletePost(String userId,String postId);
 
-//    // 키워드 검색
-//    PostListResponse searchPosts(String keyword, int page, int size);
-//
+    // 키워드 검색
+    PostListResponseDto searchPosts(String keyword, int page, int size);
+
 //    // 태그 검색
 //    PostListResponse searchByTag(String tag, int page, int size);
 }

@@ -27,7 +27,6 @@ public class UserPostServiceImpl implements UserPostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final ImageStorageService imageStorageService;
-    private final ImageStorageRepository imageStorageRepository;
     private final ImageValidator imageValidator;
 
 
@@ -92,6 +91,37 @@ public class UserPostServiceImpl implements UserPostService {
         }
         postRepository.delete(UUID.fromString(postId));
     }
+
+    @Override
+    public PostListResponseDto searchPosts(String keyword, int page, int size) {
+        List<Post> filtered = postRepository.findByKeyword(keyword);
+
+        if (filtered == null || filtered.isEmpty()) {
+            throw new IllegalArgumentException("검색한 단어는 없습니다. 다시 검색해주세요");
+        }
+
+        int totalPosts = filtered.size();
+        int totalPages = (int) Math.ceil((double) totalPosts / size);
+
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, totalPosts);
+        if (fromIndex >= totalPosts) {
+            return new PostListResponseDto(List.of(), totalPages, page);
+        }
+
+        List<Post> paged = filtered.subList(fromIndex, toIndex);
+
+        List<PostSummaryDto> postDtos = paged.stream()
+                .map(post -> {
+                    User author = userRepository.findById(post.getAuthorId())
+                            .orElseThrow(() -> new IllegalArgumentException("해당 게시판 작성자가 실종되었습니다."));
+                    return PostMapper.toSummaryDto(post, author);
+                })
+                .toList();
+
+        return new PostListResponseDto(postDtos, totalPages, page);
+    }
+
 
 
 }
