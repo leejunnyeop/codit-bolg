@@ -1,0 +1,35 @@
+package com.codit.blog.service.post;
+
+import com.codit.blog.domain.dto.postDto.PostCreatResponseDto;
+import com.codit.blog.domain.dto.postDto.PostCreateRequestDto;
+import com.codit.blog.domain.dto.postDto.PostDetailResponseDto;
+import com.codit.blog.domain.dto.postDto.PostListResponseDto;
+import com.codit.blog.domain.dto.postDto.PostUpdateRequestDto;
+import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
+
+
+public interface UserPostService {
+
+    // 게시물 생성 (작성자 ID 포함)
+    PostCreatResponseDto createPost(String userId, PostCreateRequestDto requestDto, MultipartFile file);
+
+//    // 게시물 목록 조회
+    PostListResponseDto getPostList(int page, int size);
+
+    // 게시물 상세 조회
+    PostDetailResponseDto getPostDetail(String postId);
+
+    // 게시물 수정 (작성자 확인 필요)
+    void updatePost(String userId, String postId, PostUpdateRequestDto requestDto,MultipartFile file)
+            throws IOException;
+
+    // 게시물 삭제 (작성자 확인 필요)
+    void deletePost(String userId,String postId);
+
+    // 키워드 검색
+    PostListResponseDto searchPosts(String keyword, int page, int size);
+
+    // 태그 검색
+    PostListResponseDto searchByTag(String tag, int page, int size);
+}
