@@ -1,6 +1,7 @@
 package com.codit.blog.repository;
 
 import com.codit.blog.domain.entity.Images;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,8 @@ public class ImagesRepository extends AbstractFileRepository<Images> {
         }
     }
 
+    public List<Images> findAll() {
+        Map<UUID, Images> imagesMap = loadAll();
+        return imagesMap.values().stream().toList();
+    }
 }

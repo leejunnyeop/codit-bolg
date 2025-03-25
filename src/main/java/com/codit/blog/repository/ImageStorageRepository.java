@@ -1,9 +1,11 @@
 package com.codit.blog.repository;
 
 import com.codit.blog.domain.entity.PostImage;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -29,6 +31,13 @@ public class ImageStorageRepository extends AbstractFileRepository<PostImage> {
         return postImageMap.values().stream()
                 .filter(postImage -> postImage.getPostId().equals(postId))
                 .findFirst();
+    }
+
+    public List<UUID> findByImageId() {
+        Map<UUID, PostImage> postImageMap = loadAll();
+        return postImageMap.values().stream()
+                .map(PostImage::getImageId)
+                .toList();
     }
 
 }

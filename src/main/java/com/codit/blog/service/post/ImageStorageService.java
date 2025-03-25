@@ -7,6 +7,7 @@ import com.codit.blog.repository.ImageStorageRepository;
 import com.codit.blog.repository.ImagesRepository;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,21 @@ public class ImageStorageService {
             throw new IllegalArgumentException("확장자가 없는 파일입니다.");
         }
         return filename.substring(lastDot + 1).toLowerCase();
+    }
+
+    public void cleanup() {
+        List<UUID> postImageList = imageStorageRepository.findByImageId();
+        List<Images> imagesList = imagesRepository.findAll();
+        for (Images images : imagesList) {
+            if (!postImageList.contains(images.getId())) {
+                File file = new File(uploadDir + File.separator + images.getId());
+                if (file.exists()) {
+                    file.delete();
+                }
+                imagesRepository.delete(images.getId());
+            }
+        }
+
     }
 }
 
