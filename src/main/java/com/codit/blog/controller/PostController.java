@@ -10,6 +10,7 @@ import com.codit.blog.util.ImageValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,21 +32,17 @@ public class PostController {
     private final UserPostService userPostService;
 
     @PostMapping()
-    public ResponseEntity<PostCreatResponseDto> createPost(
-            @RequestBody @Valid PostCreateRequestDto requestDto, MultipartFile file,
-            HttpServletRequest request
-    ) {
+    public ResponseEntity<PostCreatResponseDto> createPost(@RequestBody @Valid PostCreateRequestDto requestDto,
+                                                           MultipartFile file, HttpServletRequest request) {
         String userId = (String) request.getAttribute("userId");
         return ResponseEntity.ok(userPostService.createPost(userId, requestDto, file));
     }
 
 
     @GetMapping()
-    public ResponseEntity<PostListResponseDto> getPostList(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            HttpServletRequest request
-    ) {
+    public ResponseEntity<PostListResponseDto> getPostList(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "10") int size,
+                                                           HttpServletRequest request) {
         String userId = (String) request.getAttribute("userId");
         PostListResponseDto response = userPostService.getPostList(page, size);
         return ResponseEntity.ok(response);
@@ -58,15 +55,15 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<String> updatePost(@PathVariable String postId,PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request,MultipartFile file)
-            throws IOException {
+    public ResponseEntity<String> updatePost(@PathVariable String postId, PostUpdateRequestDto postUpdateRequestDto,
+                                             HttpServletRequest request, MultipartFile file) throws IOException {
         String userId = (String) request.getAttribute("userId");
-        userPostService.updatePost(userId, postId, postUpdateRequestDto,file);
+        userPostService.updatePost(userId, postId, postUpdateRequestDto, file);
         return ResponseEntity.ok("회원정보가 수정 완료되었습니다.");
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable String postId, HttpServletRequest request){
+    public ResponseEntity<String> deletePost(@PathVariable String postId, HttpServletRequest request) {
         String userId = (String) request.getAttribute("userId");
         userPostService.deletePost(userId, postId);
         return ResponseEntity.noContent().build();
@@ -74,11 +71,23 @@ public class PostController {
 
     //GET /api/posts/search?keyword={keyword}&page={page}&size={size} - 키워드 검색
 
-      @GetMapping("/search")
+    @GetMapping("/search")
     public ResponseEntity<PostListResponseDto> searchPost(@RequestParam(defaultValue = "0") int page,
                                                           @RequestParam(defaultValue = "10") int size,
-                                                          @RequestParam String keyword){
-          PostListResponseDto postListResponseDto = userPostService.searchPosts(keyword, page, size);
-          return ResponseEntity.ok(postListResponseDto);
-      }
+                                                          @RequestParam String keyword) {
+        PostListResponseDto postListResponseDto = userPostService.searchPosts(keyword, page, size);
+        return ResponseEntity.ok(postListResponseDto);
+    }
+
+    //GET /api/posts/tags/{tag}?page={page}&size={size} - 태그 검색
+
+    @GetMapping("/tag")
+    public ResponseEntity<PostListResponseDto> tagPost(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "10") int size,
+                                                       @RequestParam String tag) {
+        PostListResponseDto postListResponseDto = userPostService.searchByTag(tag, page, size);
+        return ResponseEntity.ok(postListResponseDto);
+    }
+
+
 }

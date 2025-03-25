@@ -75,4 +75,13 @@ public class PostRepository extends AbstractFileRepository<Post>{
                 post.getContent().toLowerCase().contains(keyword))
                 .collect(Collectors.toList());
     }
+
+    public List<Post> findByTag(String tag) {
+        Map<UUID, Post> postMap = loadAll();
+        return postMap.values().stream()
+                .filter(post ->post.getTags().stream()
+                        .anyMatch(t -> t.toLowerCase().equals(tag))
+                )
+        .collect(Collectors.toList());
+    }
 }

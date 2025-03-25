@@ -30,6 +30,6 @@ public interface UserPostService {
     // 키워드 검색
     PostListResponseDto searchPosts(String keyword, int page, int size);
 
-//    // 태그 검색
-//    PostListResponse searchByTag(String tag, int page, int size);
+    // 태그 검색
+    PostListResponseDto searchByTag(String tag, int page, int size);
 }

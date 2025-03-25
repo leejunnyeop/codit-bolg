@@ -6,9 +6,9 @@ import com.codit.blog.domain.dto.userDto.UserRequestDto;
 
 public interface UserService {
 
-    public void create(UserRequestDto userRequestDto);
+    void create(UserRequestDto userRequestDto);
 
-    public UserLoginResponse login(UserLoginRequestDto userLoginRequestDto);
+    UserLoginResponse login(UserLoginRequestDto userLoginRequestDto);
 
 
 
