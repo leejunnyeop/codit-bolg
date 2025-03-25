@@ -7,6 +7,7 @@ import com.codit.blog.domain.entity.User;
 import com.codit.blog.domain.mapper.UserMapper;
 import com.codit.blog.jwt.JwtUtil;
 import com.codit.blog.repository.UserRepository;
+import com.codit.blog.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,11 @@ public class UerServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-    private static Boolean check = Boolean.TRUE;
+    private final UserUtil userUtil;
 
     @Override
-    public void create(UserRequestDto userRequestDto){
-        if(!userRepository.findByEmail(userRequestDto.email()).isPresent()){
-            throw new IllegalArgumentException("존재하는 이메일 입니다. 확인 부탁드립니다");
-        }
+    public void create(UserRequestDto userRequestDto) {
+        userUtil.validateEmailNotDuplicate(userRequestDto.email());
         String bcryptPassword = BCrypt.hashpw(userRequestDto.password(), BCrypt.gensalt());
         User user = UserMapper.toUser(userRequestDto, bcryptPassword);
         userRepository.save(user);
@@ -31,15 +30,13 @@ public class UerServiceImpl implements UserService {
 
     @Override
     public UserLoginResponse login(UserLoginRequestDto userLoginRequestDto) {
-        User user = userRepository.findById(userLoginRequestDto.uuid())
-                .orElseThrow(() -> new IllegalArgumentException("없는 회원 입니다. 확인 부탁드립니다"));
+        User user = userUtil.getUserOrThrow(userLoginRequestDto.uuid());
 
-        if(!BCrypt.checkpw(userLoginRequestDto.password(), user.getPassword())){
-            check = false;
-            return UserMapper.toUserLoginResponse(check, null);
+        if (!BCrypt.checkpw(userLoginRequestDto.password(), user.getPassword())) {
+            return UserMapper.toUserLoginResponse(false, null);
         }
-        String generateToken = jwtUtil.generateToken(user.getId().toString());
-        return UserMapper.toUserLoginResponse(check, generateToken);
-    }
 
+        String generateToken = jwtUtil.generateToken(user.getId().toString());
+        return UserMapper.toUserLoginResponse(true, generateToken);
+    }
 }
